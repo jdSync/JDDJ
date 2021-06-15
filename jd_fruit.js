@@ -91,6 +91,11 @@ async function jdFruit() {
       // option['media-url'] = $.farmInfo.farmUserPro.goodsImage;
       message = `【水果名称】${$.farmInfo.farmUserPro.name}\n`;
       console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${$.farmInfo.farmUserPro.shareCode}\n`);
+      await $.get({
+        url: 'http://107.172.97.176:8080/activeJdFruitCode?code=' + $.farmInfo.farmUserPro.shareCode
+      }, function (err, resp, data) {
+        console.log('互助码状态:' + resp.body);
+      })
       console.log(`\n【已成功兑换水果】${$.farmInfo.farmUserPro.winTimes}次\n`);
       message += `【已兑换水果】${$.farmInfo.farmUserPro.winTimes}次\n`;
       await masterHelpShare();//助力好友
@@ -121,7 +126,7 @@ async function jdFruit() {
       await doTenWaterAgain();//再次浇水
       await predictionFruit();//预测水果成熟时间
 
-      //await notify.sendNotify('东东农厂', $.nickName + '\n' + message);
+      await notify.sendNotify('东东农厂', $.nickName + '\n' + message);
     } else {
       console.log(`初始化农场数据异常, 请登录京东 app查看农场0元水果功能是否正常,农场初始化数据: ${JSON.stringify($.farmInfo)}`);
       message = `【数据异常】请手动登录京东app查看此账号${$.name}是否正常`;
@@ -1256,7 +1261,7 @@ function timeFormat(time) {
 function readShareCode() {
   return new Promise(async resolve => {
     //$.get({ url: `http://share.turinglabs.net/api/v3/farm/query/${randomCount}/`, timeout: 10000, }, (err, resp, data) => {
-      $.get({ url: `http://107.172.97.176:8080/queryJdFruitCode`, timeout: 10000, }, (err, resp, data) => {
+    $.get({ url: `http://107.172.97.176:8080/queryJdFruitCode`, timeout: 10000, }, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
